@@ -21,7 +21,7 @@ provided *input-file* with 16 bytes per line.
 
 # OPTIONS
 
--n *INTEGER*, \--length *INTEGER*
+-n *INTEGER*, \--length=*INTEGER*
 :   Specify the number of bytes to read and dump from *input-file*.
     Nohex defaults to dumping the entire file.
 
