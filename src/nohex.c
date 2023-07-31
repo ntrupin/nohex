@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 #include "flags.h"
 
 static nohex_flags *flags;
@@ -85,18 +86,45 @@ int output_hex(const char *fname, nohex_flags *_flags) {
     // byte to read into
     unsigned char ch;
 
-    // temp buffer
-    char buffer[flags->cols * 12];
-    FILE *bufptr = fmemopen(buffer, sizeof(buffer), "wb");
-
     // byte count trackers
     int bytes_read = 0;
     int excess;
+
+    // skip bytes
+    if (flags->skip && fseek(fp, flags->skip, SEEK_SET) != 0) {
+        fprintf(stderr, "failed to skip %d bytes", flags->skip);
+        fclose(fp);
+        return 0;
+    } else {
+        // setup offset
+        if (flags->length < INT_MAX - flags->skip)
+            flags->length += flags->skip;
+        else
+            flags->length = INT_MAX;
+
+        bytes_read += flags->skip;
+    }
+
+    // temp buffer
+    char buffer[flags->cols * 12];
+    FILE *bufptr = fmemopen(buffer, sizeof(buffer), "wb");
 
     // border length
     int border_len = flags->cols * 4 + 4 + (flags->offset ? 10 : 0);
 
     putboxend(box_chars.top_left, box_chars.top_right, border_len);
+
+    // print skipped bytes
+    if ((excess = bytes_read % flags->cols) > 0) {
+        printf("\n%s %07X %s %*s", 
+                // offset
+                box_chars.vertical, bytes_read - excess, box_chars.vertical_dash,
+                // spacing
+                excess * 3, "");
+        for (int i=0;i<excess;i++)
+            fputcolor(bufptr, ' ', DEFAULT);
+    }
+
     while (fread(&ch, sizeof(ch), 1, fp) == 1 
             && bytes_read < flags->length) {
 
@@ -135,16 +163,18 @@ int output_hex(const char *fname, nohex_flags *_flags) {
         // if end of col, output text
         if (bytes_read % flags->cols == 0 || bytes_read == flags->length) {
             excess = bytes_read % flags->cols;
+            if (excess == 0)
+                excess = flags->cols;
 
             printf("%*s%s %.*s%*s %s",
                     // padding after bytes
-                    excess * 3, "",
+                    (flags->cols - excess) * 3, "",
                     // dash
                     box_chars.vertical_dash,
                     // number of characters
-                    (flags->cols - excess) * 12, buffer,
+                    excess * 12, buffer,
                     // padding after characters
-                    excess, "",
+                    (flags->cols - excess), "",
                     // end bar
                     box_chars.vertical);
 

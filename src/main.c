@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 
     while (1) {
         option_index = 0;
-        f = getopt_long(argc, argv, "n:c:", long_options, &option_index);
+        f = getopt_long(argc, argv, "n:c:s:", long_options, &option_index);
 
         // end of options
         if (f == -1)
