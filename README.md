@@ -6,7 +6,7 @@ A simple hexdump utility.
 
 ## Installation
 
-Requirements: GCC, Clang, or any other C compiler with support for [case ranges](https://gcc.gnu.org/onlinedocs/gcc/Case-Ranges.html).
+Requirements: a C99+ compiler and GNU Make.
 
 ```bash
 git clone https://github.com/ntrupin/nohex.git
@@ -14,4 +14,4 @@ cd nohex
 make
 ```
 
-Your executable can be found at `build/nohex`.
+`make` builds an executable at `build/nohex`. For the man pages, run `man docs/hex.1` or read `docs/hex.1.md`.

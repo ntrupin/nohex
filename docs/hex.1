@@ -31,20 +31,28 @@ If no options are provided, Nohex defaults to dumping the entire
 provided \f[I]input-file\f[R] with 16 bytes per line.
 .SH OPTIONS
 .TP
---help
-Display the help menu.
-.TP
---no-color
-Disabled colored output.
-By default, Nohex uses 8-bit terminal colors to enhance output.
-.TP
--n \f[I]INTEGER\f[R], --bytes \f[I]INTEGER\f[R]
+-n \f[I]INTEGER\f[R], --length \f[I]INTEGER\f[R]
 Specify the number of bytes to read and dump from \f[I]input-file\f[R].
 Nohex defaults to dumping the entire file.
 .TP
 -c \f[I]INTEGER\f[R], --cols=\f[I]INTEGER\f[R]
 Specify the number of bytes to print per output row.
 Nohex defaults to 16 columns per row.
+.SH FLAGS
+.TP
+--help
+Display the help menu.
+.TP
+--no-color
+Disable colored output.
+By default, Nohex uses 8-bit terminal colors to enhance output.
+.TP
+--offset
+Show the hexadecimal input offset.
+.TP
+--ascii
+Use ascii box-drawing characters.
+By default, Nohex uses Unicode box-drawing characters.
 .SH SEE ALSO
 .PP
 The source code for Nohex at <https://github.com/ntrupin/nohex>

@@ -21,20 +21,29 @@ provided *input-file* with 16 bytes per line.
 
 # OPTIONS
 
-\--help
-:   Display the help menu.
-
-\--no-color
-:   Disabled colored output. By default, Nohex uses 8-bit terminal
-    colors to enhance output.
-
--n *INTEGER*, \--bytes *INTEGER*
+-n *INTEGER*, \--length *INTEGER*
 :   Specify the number of bytes to read and dump from *input-file*.
     Nohex defaults to dumping the entire file.
 
 -c *INTEGER*, \--cols=*INTEGER*
 :   Specify the number of bytes to print per output row. Nohex defaults
     to 16 columns per row.
+
+# FLAGS
+
+\--help
+:   Display the help menu.
+
+\--no-color
+:   Disable colored output. By default, Nohex uses 8-bit terminal
+    colors to enhance output.
+
+\--offset
+:   Show the hexadecimal input offset.
+
+\--ascii
+:   Use ascii box-drawing characters. By default, Nohex uses Unicode
+    box-drawing characters.
 
 # SEE ALSO
 

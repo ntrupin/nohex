@@ -3,27 +3,25 @@
 #include <limits.h>
 #include <errno.h>
 #include <getopt.h>
+#include "flags.h"
 #include "hex.h"
 
-// --help
-static int help_flag;
-
-// --no-color
-static int nocolor_flag;
-
-// --bytes, -n
-static int bytes_flag;
+static nohex_flags flags;
 
 // command line options
 static struct option long_options[] = {
     // show help menu
-    { "help", no_argument, &help_flag, 1 },
+    { "help", no_argument, &(flags.help), 1 },
     // turn off colors in output
-    { "no-color", no_argument, &nocolor_flag, 1 },
+    { "no-color", no_argument, &(flags.nocolor), 1 },
     // bytes to show in output
-    { "bytes", required_argument, 0, 'n' },
+    { "length", required_argument, 0, 'n' },
     // columns per row
-    { "cols", required_argument, 0, 'c' }
+    { "cols", required_argument, 0, 'c' },
+    // show offset
+    { "offset", no_argument, &(flags.offset), 1 },
+    // use ascii box chars
+    { "ascii", no_argument, &(flags.ascii), 1 }
 };
 
 // read a long from optarg and check for errors
@@ -51,14 +49,16 @@ void output_help() {
                  "\n"
                  "For more info see `man docs/hex.1`\n"
                  "\n"
-                 "Usage: hex <flags> <filename>\n"
+                 "Usage: hex <options> <filename>\n"
                  "----------------------------------------------\n"
                  "\n"
-                 "available flags:\n"
+                 "available options:\n"
                  "  --help              show this menu\n"
-                 "  --bytes, -n <int>   # of bytes to output\n"
+                 "  --length, -n <int>  # of bytes to output\n"
                  "  --cols, -c <int>    # of cols per output row\n"
-                 "  --no-color          print without color\n";
+                 "  --no-color          print without color\n"
+                 "  --offset            show input offset\n"
+                 "  --ascii             use ascii box characters\n";
     printf("%s\n", text);
 }
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
         switch (f) {
             case 0:
                 if (long_options[option_index].flag != 0) {
-                    if (help_flag)
+                    if (flags.help)
                         output_help();
                     break;
                 }
@@ -122,7 +122,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    output_hex(fname, bytes, cols);
+    output_hex(fname, bytes, cols, &flags);
 
     return 0;
 }
