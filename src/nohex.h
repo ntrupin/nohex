@@ -1,8 +1,10 @@
-#ifndef HEX_H
-#define HEX_H
+#ifndef NOHEX_H
+#define NOHEX_H
 
 #include <stdio.h>
 #include "flags.h"
+
+#define NOHEX_VERSION "2023.07.31"
 
 // public functions
 

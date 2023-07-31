@@ -12,6 +12,8 @@ static nohex_flags flags;
 static struct option long_options[] = {
     // show help menu
     { "help", no_argument, &(flags.help), 1 },
+    // show version
+    { "version", no_argument, &(flags.version), 1 },
     // turn off colors in output
     { "no-color", no_argument, &(flags.nocolor), 1 },
     // bytes to show in output
@@ -42,8 +44,10 @@ int read_long(char *optarg, long *x) {
 }
 
 void output_help() {
-    char *text = "                Noah's Hexdump                \n"
+    char *text = "\n                Noah's Hexdump                \n"
                  "==============================================\n"
+                 "\n"
+                 "version "NOHEX_VERSION"\n"
                  "\n"
                  "A simple hexdump utility.\n"
                  "\n"
@@ -54,6 +58,7 @@ void output_help() {
                  "\n"
                  "available options:\n"
                  "  --help              show this menu\n"
+                 "  --version           show nohex version\n"
                  "  --length, -n <int>  # of bytes to output\n"
                  "  --cols, -c <int>    # of cols per output row\n"
                  "  --no-color          print without color\n"
@@ -64,8 +69,8 @@ void output_help() {
 
 int main(int argc, char **argv) {
     int f, option_index;
-    long bytes = LONG_MAX,
-         cols  = 16;
+    long  bytes = INT_MAX,
+          cols  = 16;
     char *endptr = NULL, 
          *fname  = NULL;
 
@@ -80,8 +85,13 @@ int main(int argc, char **argv) {
         switch (f) {
             case 0:
                 if (long_options[option_index].flag != 0) {
-                    if (flags.help)
+                    if (flags.help) {
                         output_help();
+                        exit(0);
+                    } else if (flags.version) {
+                        printf("%s\n", NOHEX_VERSION);
+                        exit(0);
+                    }
                     break;
                 }
                 break;
@@ -89,6 +99,11 @@ int main(int argc, char **argv) {
             case 'n':
                 if (!read_long(optarg, &bytes)) {
                     fprintf(stderr, "bytes option expected an integer, got '%s' instead", optarg);
+                    exit(1);
+                }
+
+                if (bytes > INT_MAX || bytes < INT_MIN) {
+                    fprintf(stderr, "bytes option expected an integer, got long '%lu' instead", bytes);
                     exit(1);
                 }
                 break;
@@ -107,6 +122,7 @@ int main(int argc, char **argv) {
 
             case '?':
                 output_help();
+                exit(1);
                 break;
 
             default:

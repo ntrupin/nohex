@@ -3,6 +3,7 @@
 
 typedef struct nohex_flags {
     int help;
+    int version;
     int nocolor;
     int offset;
     int ascii;
