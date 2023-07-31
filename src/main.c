@@ -71,6 +71,7 @@ void output_help() {
                  "  --version           show nohex version\n"
                  "  --length, -n <int>  # of bytes to output\n"
                  "  --cols, -c <int>    # of cols per output row\n"
+                 "  --skip, -s <int>    # of bytes to skip\n"
                  "  --no-color          print without color\n"
                  "  --offset            show input offset\n"
                  "  --ascii             use ascii box characters\n";

@@ -38,6 +38,12 @@ Nohex defaults to dumping the entire file.
 -c \f[I]INTEGER\f[R], --cols=\f[I]INTEGER\f[R]
 Specify the number of bytes to print per output row.
 Nohex defaults to 16 columns per row.
+.TP
+-s \f[I]INTEGER\f[R], --skip=\f[I]INTEGER\f[R]
+Specify the number of bytes to skip before reading from
+\f[I]input-file\f[R].
+Nohex defaults to a skip of 0 (or, starting from the beginning) of
+\f[I]input-file\f[R].
 .SH FLAGS
 .TP
 --help

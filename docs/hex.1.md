@@ -29,6 +29,11 @@ provided *input-file* with 16 bytes per line.
 :   Specify the number of bytes to print per output row. Nohex defaults
     to 16 columns per row.
 
+-s *INTEGER*, \--skip=*INTEGER*
+:   Specify the number of bytes to skip before reading from *input-file*.
+    Nohex defaults to a skip of 0 (or, starting from the beginning)
+    of *input-file*.
+
 # FLAGS
 
 \--help
