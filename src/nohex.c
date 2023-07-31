@@ -53,7 +53,7 @@ static inline int is_ascii(unsigned char ch) {
     return (ch >= 0x00 && ch <= 0x7F);
 }
 
-int output_hex(const char *fname, int bytes, int cols, nohex_flags *_flags) {
+int output_hex(const char *fname, nohex_flags *_flags) {
     flags = _flags;
 
     // box drawing chars
@@ -86,7 +86,7 @@ int output_hex(const char *fname, int bytes, int cols, nohex_flags *_flags) {
     unsigned char ch;
 
     // temp buffer
-    char buffer[cols * 12];
+    char buffer[flags->cols * 12];
     FILE *bufptr = fmemopen(buffer, sizeof(buffer), "wb");
 
     // byte count trackers
@@ -94,13 +94,13 @@ int output_hex(const char *fname, int bytes, int cols, nohex_flags *_flags) {
     int excess;
 
     // border length
-    int border_len = cols * 4 + 4 + (flags->offset ? 10 : 0);
+    int border_len = flags->cols * 4 + 4 + (flags->offset ? 10 : 0);
 
     putboxend(box_chars.top_left, box_chars.top_right, border_len);
     while (fread(&ch, sizeof(ch), 1, fp) == 1 
-            && bytes_read < bytes) {
+            && bytes_read < flags->length) {
 
-        if (bytes_read % cols == 0) {
+        if (bytes_read % flags->cols == 0) {
             printf("\n%s ", box_chars.vertical);
 
             // show offset if flag set
@@ -133,8 +133,8 @@ int output_hex(const char *fname, int bytes, int cols, nohex_flags *_flags) {
         bytes_read += 1;
 
         // if end of col, output text
-        if (bytes_read % cols == 0 || bytes_read == bytes) {
-            excess = bytes_read % cols;
+        if (bytes_read % flags->cols == 0 || bytes_read == flags->length) {
+            excess = bytes_read % flags->cols;
 
             printf("%*s%s %.*s%*s %s",
                     // padding after bytes
@@ -142,7 +142,7 @@ int output_hex(const char *fname, int bytes, int cols, nohex_flags *_flags) {
                     // dash
                     box_chars.vertical_dash,
                     // number of characters
-                    (cols - excess) * 12, buffer,
+                    (flags->cols - excess) * 12, buffer,
                     // padding after characters
                     excess, "",
                     // end bar

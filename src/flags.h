@@ -7,6 +7,9 @@ typedef struct nohex_flags {
     int nocolor;
     int offset;
     int ascii;
+    int length;
+    int cols;
+    int skip;
 } nohex_flags;
 
 #endif

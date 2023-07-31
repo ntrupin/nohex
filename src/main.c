@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <getopt.h>
 #include "flags.h"
-#include "hex.h"
+#include "nohex.h"
 
 static nohex_flags flags;
 
@@ -16,30 +16,40 @@ static struct option long_options[] = {
     { "version", no_argument, &(flags.version), 1 },
     // turn off colors in output
     { "no-color", no_argument, &(flags.nocolor), 1 },
-    // bytes to show in output
+    // bytes to read
     { "length", required_argument, 0, 'n' },
     // columns per row
     { "cols", required_argument, 0, 'c' },
     // show offset
     { "offset", no_argument, &(flags.offset), 1 },
     // use ascii box chars
-    { "ascii", no_argument, &(flags.ascii), 1 }
+    { "ascii", no_argument, &(flags.ascii), 1 },
+    // skip bytes
+    { "skip", required_argument, 0, 1 }
 };
 
-// read a long from optarg and check for errors
-int read_long(char *optarg, long *x) {
+// read an integer from optarg and check for errors
+int read_int(char *optarg, int *x) {
     char *endptr = NULL;
+    long tmp;
 
     // set errno before strtol
     errno = 0;
-    *x = strtol(optarg, &endptr, 0);
+    tmp = strtol(optarg, &endptr, 0);
 
     // check for strtol errors
     if (endptr == optarg || *endptr != '\0' 
-        || ((*x == LONG_MIN || *x == LONG_MAX) && errno == ERANGE)) {
+        || ((tmp == LONG_MIN || tmp == LONG_MAX) && errno == ERANGE)) {
         fprintf(stderr, "option expected an integer, got '%s' instead", optarg);
         return 0;
     }
+
+    if (tmp > INT_MAX || tmp < INT_MIN) {
+        fprintf(stderr, "provided value '%lu' exceeds integer bounds", tmp);
+        return 0;
+    }
+
+    *x = (int)tmp;
     return 1;
 }
 
@@ -69,8 +79,9 @@ void output_help() {
 
 int main(int argc, char **argv) {
     int f, option_index;
-    long  bytes = INT_MAX,
-          cols  = 16;
+    flags.length = INT_MAX;
+    flags.cols   = 16;
+    flags.skip   = 0;
     char *endptr = NULL, 
          *fname  = NULL;
 
@@ -96,28 +107,22 @@ int main(int argc, char **argv) {
                 }
                 break;
 
+            // --length, -n
             case 'n':
-                if (!read_long(optarg, &bytes)) {
-                    fprintf(stderr, "bytes option expected an integer, got '%s' instead", optarg);
+                if (!read_int(optarg, &(flags.length)))
                     exit(1);
-                }
-
-                if (bytes > INT_MAX || bytes < INT_MIN) {
-                    fprintf(stderr, "bytes option expected an integer, got long '%lu' instead", bytes);
-                    exit(1);
-                }
                 break;
 
+            // --cols, -c
             case 'c':
-                if (!read_long(optarg, &cols)) {
-                    fprintf(stderr, "columns option expected an integer, got '%s' instead", optarg);
+                if (!read_int(optarg, &(flags.cols)))
                     exit(1);
-                }
+                break;
 
-                if (cols > INT_MAX || cols < INT_MIN) {
-                    fprintf(stderr, "columns option expected an integer, got long '%lu' instead", cols);
+            // --skip, -s
+            case 's':
+                if (!read_int(optarg, &(flags.skip)))
                     exit(1);
-                }
                 break;
 
             case '?':
@@ -138,7 +143,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    output_hex(fname, bytes, cols, &flags);
+    output_hex(fname, &flags);
 
     return 0;
 }
