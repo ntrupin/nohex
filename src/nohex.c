@@ -83,6 +83,11 @@ int output_hex(const char *fname, nohex_flags *_flags) {
        return 0;
     }
 
+    // get file size
+    fseek(fp, 0L, SEEK_END);
+    long fsize = ftell(fp);
+    rewind(fp);
+
     // byte to read into
     unsigned char ch;
 
@@ -161,7 +166,7 @@ int output_hex(const char *fname, nohex_flags *_flags) {
         bytes_read += 1;
 
         // if end of col, output text
-        if (bytes_read % flags->cols == 0 || bytes_read == flags->length) {
+        if (bytes_read % flags->cols == 0 || bytes_read == fsize) {
             excess = bytes_read % flags->cols;
             if (excess == 0)
                 excess = flags->cols;
