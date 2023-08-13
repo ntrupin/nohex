@@ -26,7 +26,10 @@ static struct box_chars {
 
 // print ch to stdout with color
 static inline void putcolor(unsigned char ch, const char *color) {
-    printf("%s%02X%s ", flags->nocolor ? DEFAULT : color, ch, RESET);
+    if (flags->octal) 
+        printf("%s%03O%s ", flags->nocolor ? DEFAULT : color, ch, RESET);
+    else
+        printf("%s%02X%s ", flags->nocolor ? DEFAULT : color, ch, RESET);
 }
 
 // print ch to file buffer with color
@@ -115,7 +118,7 @@ int output_hex(const char *fname, nohex_flags *_flags) {
     FILE *bufptr = fmemopen(buffer, sizeof(buffer), "wb");
 
     // border length
-    int border_len = flags->cols * 4 + 4 + (flags->offset ? 10 : 0);
+    int border_len = flags->cols * (flags->octal ? 5 : 4) + 4 + (flags->offset ? 10 : 0);
 
     putboxend(box_chars.top_left, box_chars.top_right, border_len);
 

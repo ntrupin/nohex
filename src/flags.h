@@ -10,6 +10,7 @@ typedef struct nohex_flags {
     int length;
     int cols;
     int skip;
+    int octal;
 } nohex_flags;
 
 #endif

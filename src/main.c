@@ -16,6 +16,8 @@ static struct option long_options[] = {
     { "version", no_argument, &(flags.version), 1 },
     // turn off colors in output
     { "no-color", no_argument, &(flags.nocolor), 1 },
+    // output octal
+    { "octal", no_argument, &(flags.octal), 1 },
     // bytes to read
     { "length", required_argument, 0, 'n' },
     // columns per row
@@ -74,7 +76,8 @@ void output_help() {
                  "  --skip, -s <int>    # of bytes to skip\n"
                  "  --no-color          print without color\n"
                  "  --offset            show input offset\n"
-                 "  --ascii             use ascii box characters\n";
+                 "  --ascii             use ascii box characters\n"
+                 "  --octal             produce octal output";
     printf("%s\n", text);
 }
 
