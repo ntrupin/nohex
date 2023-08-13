@@ -14,4 +14,4 @@ cd nohex
 make
 ```
 
-`make` builds an executable at `build/nohex`. For the man pages, run `man docs/hex.1` or read `docs/hex.1.md`.
+`make` builds an executable at `build/nohex`. For the man pages, run `man docs/hex.1` or read [`docs/hex.1.md`](./docs/hex.1.md).
