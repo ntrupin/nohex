@@ -180,7 +180,7 @@ int output_hex(const char *fname, nohex_flags *_flags) {
 
             printf("%*s%s %.*s%*s %s",
                     // padding after bytes
-                    (flags->cols - excess) * 3, "",
+                    (flags->cols - excess) * (flags->octal ? 4 : 3), "",
                     // dash
                     box_chars.vertical_dash,
                     // number of characters
