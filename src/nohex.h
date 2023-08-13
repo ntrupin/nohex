@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "flags.h"
 
-#define NOHEX_VERSION "2023.07.31"
+#define NOHEX_VERSION "2023.08.04"
 
 // public functions
 
