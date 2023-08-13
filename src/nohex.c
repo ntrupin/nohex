@@ -113,6 +113,10 @@ int output_hex(const char *fname, nohex_flags *_flags) {
         bytes_read += flags->skip;
     }
 
+    // adjust fsize for smaller buffer
+    if (flags->length < fsize || fsize == 0)
+        fsize = flags->length;
+
     // temp buffer
     char buffer[flags->cols * 12];
     FILE *bufptr = fmemopen(buffer, sizeof(buffer), "wb");
