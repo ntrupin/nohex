@@ -50,6 +50,10 @@ provided *input-file* with 16 bytes per line.
 :   Use ascii box-drawing characters. By default, Nohex uses Unicode
     box-drawing characters.
 
+\--octal
+:   Produce octal output. By default, Nohex outputs hexidecimal character
+    codes.
+
 # SEE ALSO
 
 The source code for Nohex at <https://github.com/ntrupin/nohex>
